@@ -1,0 +1,2 @@
+Please delete this file when writing code in this folder.  
+It was created to pass these folders on repository.
