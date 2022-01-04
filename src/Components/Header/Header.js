@@ -1,9 +1,29 @@
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  ListItemIcon,
+  Menu,
+  MenuItem,
+  Typography,
+} from "@mui/material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import SearchIcon from "@mui/icons-material/Search";
 import React from "react";
+import { Logout } from "@mui/icons-material";
+import { Link } from "react-router-dom";
+import useAuth from "../Hooks/useAuth";
 
 const Header = () => {
+  const { logout, singleUser } = useAuth();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <>
       <Box
@@ -16,6 +36,9 @@ const Header = () => {
           gridTemplateColumns: { lg: "repeat(3,1fr)" },
           gridGap: 5,
           boxShadow: "1px 1px 5px #ccc",
+          position: "sticky",
+          top: "0",
+          zIndex: "1",
         }}
       >
         <Box
@@ -25,27 +48,33 @@ const Header = () => {
             justifyContent: { xs: "center" },
           }}
         >
-          <Box
-            sx={{ background: "#eff4fc", padding: "5px", borderRadius: "15px" }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="icon icon-tabler icon-tabler-chart-bubble"
-              width="36"
-              height="36"
-              viewBox="0 0 24 24"
-              stroke-width="2"
-              stroke="#1877f2"
-              fill="none"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+          <Link to="/">
+            <Box
+              sx={{
+                background: "#eff4fc",
+                padding: "5px",
+                borderRadius: "15px",
+              }}
             >
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <circle cx="6" cy="16" r="3" />
-              <circle cx="16" cy="19" r="2" />
-              <circle cx="14.5" cy="7.5" r="4.5" />
-            </svg>
-          </Box>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="icon icon-tabler icon-tabler-chart-bubble"
+                width="36"
+                height="36"
+                viewBox="0 0 24 24"
+                strokeWidth="2"
+                stroke="#1877f2"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <circle cx="6" cy="16" r="3" />
+                <circle cx="16" cy="19" r="2" />
+                <circle cx="14.5" cy="7.5" r="4.5" />
+              </svg>
+            </Box>
+          </Link>
           <Typography
             variant="h6"
             sx={{
@@ -107,11 +136,60 @@ const Header = () => {
               Create
             </Typography>
           </Button>
-          <img
-            src="https://hello-p.netlify.app/static/media/venti.bca7c018ca19eab4b1df.png"
-            alt=""
-            style={{ borderRadius: "15px", width: "45px" }}
-          />
+          <Box>
+            <img
+              src={singleUser?.photoURL}
+              alt=""
+              style={{ borderRadius: "15px", width: "45px", cursor: "pointer" }}
+              onClick={handleClick}
+            />
+            <Menu
+              anchorEl={anchorEl}
+              id="account-menu"
+              open={open}
+              onClose={handleClose}
+              onClick={handleClose}
+              PaperProps={{
+                elevation: 0,
+                sx: {
+                  overflow: "visible",
+                  filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                  mt: 1.5,
+                  "& .MuiAvatar-root": {
+                    width: 32,
+                    height: 32,
+                    ml: -0.5,
+                    mr: 1,
+                  },
+                  "&:before": {
+                    content: '""',
+                    display: "block",
+                    position: "absolute",
+                    top: 0,
+                    right: 14,
+                    width: 10,
+                    height: 10,
+                    bgcolor: "background.paper",
+                    transform: "translateY(-50%) rotate(45deg)",
+                    zIndex: 0,
+                  },
+                },
+              }}
+              transformOrigin={{ horizontal: "right", vertical: "top" }}
+              anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+            >
+              <MenuItem
+                onClick={() => {
+                  logout();
+                }}
+              >
+                <ListItemIcon>
+                  <Logout fontSize="small" />
+                </ListItemIcon>
+                Logout
+              </MenuItem>
+            </Menu>
+          </Box>
         </Box>
       </Box>
     </>

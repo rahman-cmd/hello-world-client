@@ -1,0 +1,7 @@
+/* .storyContainer::-webkit-scrollbar {
+  display: none;
+}
+.storyContainer {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+} */

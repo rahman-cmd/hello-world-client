@@ -2,26 +2,29 @@ import React, { useEffect, useState } from "react";
 import "./Posts.css";
 import Post from "./Post/Post";
 import { Box } from "@mui/material";
+import loadingImg from "../Media/loadingImg/loading.gif";
 
 const Posts = () => {
   const [userPosts, setUserPost] = useState([]);
-  const [isLoading, SetIsLoading] = useState(false);
   useEffect(() => {
-    fetch("./fakeData.json")
+    fetch("https://enigmatic-reef-50171.herokuapp.com/posts")
       .then((res) => res.json())
-      .then((data) => setUserPost(data));
+      .then((data) => data.sort((a, b) => b.time - a.time))
+      .then((sortedData) => setUserPost(sortedData));
   }, []);
   return (
-    <Box
-      sx={{
-        marginLeft: { xs: "auto", lg: "50px" },
-        marginRight: { xs: "auto", lg: "50px" },
-        width: { xs: "max-content", lg: "300px" },
-      }}
-    >
-      {userPosts.map((post) => (
-        <Post post={post} key={post.id}></Post>
-      ))}
+    <Box>
+      {userPosts.length === 0 ? (
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <img src={loadingImg} alt="" />
+        </div>
+      ) : (
+        <>
+          {userPosts.map((post) => (
+            <Post post={post} key={post._id}></Post>
+          ))}
+        </>
+      )}
     </Box>
   );
 };

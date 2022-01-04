@@ -1,25 +1,45 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  LinearProgress,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../../Components/Hooks/useAuth";
 import googleIcon from "./media/google.png";
 
 const Login = () => {
+  const { registerUser, authError, isLoading, signInWithGoogle, loginUser } =
+    useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const handleLogin = () => {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-    // loginUser(email, password, location, history);
+    loginUser(email, password, location, navigate);
   };
 
   const handleRegister = () => {
     const name = document.getElementById("name").value;
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-    // registerUser(name, email, password, location, history);
+    registerUser(email, password, name, navigate);
+  };
+
+  const handleGoogleSignIn = () => {
+    signInWithGoogle(location, navigate);
   };
 
   const [isNew, setIsNew] = useState(false);
   const newSwitch = () => {
     setIsNew();
   };
+
   return (
     <Box
       sx={{
@@ -72,6 +92,18 @@ const Login = () => {
               sx={{ width: { xs: "100%", lg: "70%" } }}
             />
 
+            {isLoading && (
+              <LinearProgress sx={{ width: { xs: "100%", lg: "70%" } }} />
+            )}
+            {authError && (
+              <Alert
+                severity="error"
+                sx={{ width: { xs: "95%", lg: "66.5%" } }}
+              >
+                {authError}
+              </Alert>
+            )}
+
             <Box
               sx={{
                 display: {
@@ -82,6 +114,14 @@ const Login = () => {
                 },
               }}
             >
+              <Button sx={{ borderRadius: "5px", margin: "5px" }}>
+                <img
+                  src={googleIcon}
+                  alt="Google Icon"
+                  style={{ width: "30px" }}
+                  onClick={handleGoogleSignIn}
+                />
+              </Button>
               <Button
                 sx={{
                   background: "#eff4fc",
@@ -137,6 +177,17 @@ const Login = () => {
               sx={{ width: { xs: "100%", lg: "70%" } }}
             />
 
+            {isLoading && (
+              <LinearProgress sx={{ width: { xs: "100%", lg: "70%" } }} />
+            )}
+            {authError && (
+              <Alert
+                severity="error"
+                sx={{ width: { xs: "95%", lg: "66.5%" } }}
+              >
+                {authError}
+              </Alert>
+            )}
             <Box
               sx={{
                 display: {
@@ -152,6 +203,7 @@ const Login = () => {
                   src={googleIcon}
                   alt="Google Icon"
                   style={{ width: "30px" }}
+                  onClick={handleGoogleSignIn}
                 />
               </Button>
               <Button
